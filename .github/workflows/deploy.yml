@@ -11,6 +11,10 @@ env:
   ECR_REPOSITORY: neuromatch-api
   EKS_CLUSTER_NAME: neuromatch-cluster
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   test:
     name: Run Tests
@@ -36,7 +40,7 @@ jobs:
           scan-ref: .
           format: sarif
           output: trivy-results.sarif
-      - uses: github/codeql-action/upload-sarif@v3
+      - uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results.sarif
 
