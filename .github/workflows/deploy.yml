@@ -96,6 +96,10 @@ jobs:
       - env:
           IMAGE: ${{ needs.build.outputs.image }}
         run: |
+          if [ -z "$IMAGE" ]; then
+            echo "ERROR: IMAGE output from build job is empty. Ensure the build job succeeded and pushed to ECR."
+            exit 1
+          fi
           kubectl set image deployment/backend api=$IMAGE -n neuromatch-app
           kubectl rollout status deployment/backend -n neuromatch-app
           kubectl get pods -n neuromatch-app -l app=backend
