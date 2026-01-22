@@ -68,14 +68,14 @@ jobs:
           IMAGE_URI: ${{ steps.image-meta.outputs.image }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $IMAGE_URI .
+          docker build -t $IMAGE_URI . -f Dockerfile
           docker tag $IMAGE_URI $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $IMAGE_URI
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24.0
         with:
-          image-ref: ${{ steps.build-image.outputs.image }}
+          image-ref: ${{ steps.image-meta.outputs.image }}
           format: table
           exit-code: '0'
           severity: CRITICAL,HIGH
